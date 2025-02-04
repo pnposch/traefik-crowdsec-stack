@@ -6,7 +6,7 @@ services:
         condition: service_healthy
       socket-proxy:
         condition: service_healthy
-    env_file: ${ABSOLUTE_PATH}/data/traefik/.env
+    env_file: .env
     hostname: ${SERVICES_TRAEFIK_HOSTNAME:-traefik}
     healthcheck:
       test: ["CMD", "traefik", "healthcheck", "--ping"]
@@ -14,12 +14,12 @@ services:
       interval: 10s
       retries: 3
       start_period: 10s
-    image: ${SERVICES_TRAEFIK_IMAGE:-traefik}:${SERVICES_TRAEFIK_IMAGE_VERSION:-3.1}
+    image: traefik:latest
     labels:
       traefik.enable: "true"
       traefik.http.routers.traefik-dashboad.entrypoints: websecure
       traefik.http.routers.traefik-dashboad.middlewares: default@file, traefik-dashboard-auth@file
-      traefik.http.routers.traefik-dashboad.rule: ${SERVICES_TRAEFIK_LABELS_TRAEFIK_HOST:-HOST(`traefik.yourdomain.com`)}
+      traefik.http.routers.traefik-dashboad.rule: ${SERVICES_TRAEFIK_LABELS_TRAEFIK_HOST:-HOST(`t.posch.org`)}
       traefik.http.routers.traefik-dashboad.service: api@internal
       traefik.http.routers.traefik-dashboad.tls: "true"
       traefik.http.routers.traefik-dashboad.tls.certresolver: tls_resolver
@@ -31,13 +31,10 @@ services:
     networks:
       crowdsec:
         ipv4_address: ${SERVICES_TRAEFIK_NETWORKS_CROWDSEC_IPV4:-172.31.127.253}
-        ipv6_address: ${SERVICES_TRAEFIK_NETWORKS_CROWDSEC_IPV6:-fd00:1:be:a:7001:0:3e:6ffe}
       proxy:
         ipv4_address: ${SERVICES_TRAEFIK_NETWORKS_PROXY_IPV4:-172.31.191.254}
-        ipv6_address: ${SERVICES_TRAEFIK_NETWORKS_PROXY_IPV6:-fd00:1:be:a:7001:0:3e:7fff}
       socket_proxy:
         ipv4_address: ${SERVICES_TRAEFIK_NETWORKS_SOCKET_PROXY_IPV4:-172.31.255.253}
-        ipv6_address: ${SERVICES_TRAEFIK_NETWORKS_SOCKET_PROXY_IPV6:-fd00:1:be:a:7001:0:3e:8ffe}
     ports:
       - mode: host
         target: 80
@@ -54,7 +51,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ${ABSOLUTE_PATH}/data/traefik/traefik.yml:/etc/traefik/traefik.yml
       - ${ABSOLUTE_PATH}/data/traefik/.htpasswd:/etc/traefik/.htpasswd
-      - ${ABSOLUTE_PATH}/data/traefik/certs/acme_letsencrypt.json:/etc/traefik//acme_letsencrypt.json
+      - ${ABSOLUTE_PATH}/data/traefik/certs/acme_letsencrypt.json:/etc/traefik/acme_letsencrypt.json
       - ${ABSOLUTE_PATH}/data/traefik/certs/tls_letsencrypt.json:/etc/traefik/tls_letsencrypt.json
       - ${ABSOLUTE_PATH}/data/traefik/dynamic_conf:/etc/traefik/dynamic_conf:ro
       - /var/log/traefik/:/var/log/traefik/

@@ -1,7 +1,7 @@
 services:
   socket-proxy:
     container_name: ${SERVICES_SOCKET_PROXY_CONTAINER_NAME:-socket-proxy}
-    env_file: ${ABSOLUTE_PATH}/data/socket-proxy/.env
+    env_file: .env
     hostname: ${SERVICES_SOCKET_PROXY_HOSTNAME:-socket-proxy}
     healthcheck:
       test: ["CMD-SHELL", "curl -s -o /dev/null -w '%{http_code}' http://localhost:2375 | grep -q '403' || exit 1"]
@@ -13,7 +13,6 @@ services:
     networks:
       socket_proxy:
         ipv4_address: ${SERVICES_SOCKET_PROXY_NETWORKS_SOCKET_PROXY_IPV4:-172.31.255.254}
-        ipv6_address: ${SERVICES_SOCKET_PROXY_NETWORKS_SOCKET_PROXY_IPV6:-fd00:1:be:a:7001:0:3e:8fff}
     read_only: true
     restart: unless-stopped
     tmpfs:
