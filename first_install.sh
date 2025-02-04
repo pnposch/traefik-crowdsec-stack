@@ -340,7 +340,7 @@ step_done "Firewall-Bouncer angepasst"
 # Dashboard-Benutzer erstellen
 show_step $current_step $total_steps "Erstelle Benutzer für Traefik-Dashboard"
 read -p "Bitte gib den gewünschten Benutzernamen für das Dashboard ein: " dashboard_user
-htpasswd_file="/opt/containers/traefik-crowdsec-stack/data/traefik/.htpasswd"
+htpasswd_file="data/traefik/.htpasswd"
 sudo htpasswd -c "$htpasswd_file" "$dashboard_user"
 step_done "Dashboard-Benutzer erstellt"
 ((current_step++))
